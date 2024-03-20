@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/12 22:15:48 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/13 18:48:04 by sgeiger          ###   ########.fr       */
+/*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
+/*   Updated: 2024/03/20 23:41:47 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 #include "libft/libft.h"
 #include <unistd.h>
 
-void	handler(int num)
+void	recive_byte(int signal)
 {
-	if (num == SIGUSR1)
+	static int	bit;
+	static int	out;
+
+	if (signal == SIGUSR1)
+		out |= (1 << bit);
+	bit++;
+	if (bit == 8)
 	{
-		write(1, "0", 1);
-	}
-	if (num == SIGUSR2)
-	{
-		write(1, "1", 1);
+		ft_printf("%c", out);
+		bit = 0;
+		out = 0;
 	}
 }
 
@@ -30,7 +34,7 @@ int	main(void)
 {
 	struct sigaction	sa;
 
-	sa.sa_handler = handler;
+	sa.sa_handler = recive_byte;
 	ft_printf("%d\n", getpid());
 	while (1)
 	{

@@ -5,48 +5,51 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/12 22:16:00 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/13 18:11:53 by sgeiger          ###   ########.fr       */
+/*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
+/*   Updated: 2024/03/20 23:44:24 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include "libft/libft.h"
+#include <unistd.h>
+#include <stdlib.h>
 
-void	send_bits(int pid, char *str, size_t len)
+void	send_byte(int pid, char c)
 {
-	int		shift;
-	size_t	i;
+	int	bit;
 
-	i = 0;
-	while (i <= len - 1)
+	bit = 0;
+	while (bit <= 7)
 	{
-		shift = 0;
-		while (shift < 7)
-		{
-			if ((str[i] >> shift) & 1)
-				kill(pid, SIGUSR2);
-			else
-				kill(pid, SIGUSR1);
-			shift++;
-			usleep(300);
-		}
-		i++;
+		if ((c & (1 << bit)) != 0)
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		usleep(1000);
+		bit++;
 	}
 }
 
 int	main(int argc, char *argv[])
 {
-	int		pid;
-	char	*str;
+	int	pid;
+	int	count;
 
+	count = 0;
 	if (argc == 3)
 	{
 		pid = ft_atoi(argv[1]);
-		str = argv[2];
-		send_bits(pid, str, ft_strlen(str));
+		while (argv[2][count] != '\0')
+		{
+			send_byte(pid, argv[2]);
+			count++;
+		}
 	}
 	else
+	{
+		ft_printf("Input must be \"./client <pid> <message>");
 		return (1);
+	}
 	return (0);
 }
