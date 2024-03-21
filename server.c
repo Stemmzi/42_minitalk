@@ -6,20 +6,52 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/21 17:11:54 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/21 18:59:12 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include "libft/libft.h"
-#include <unistd.h>
 
-void	recive_byte(int signal)
+size_t	write_bits(int signal, char	*str, size_t len)
 {
 	static int	bit;
 	static int	out;
+	static int	count;
+
+	if (len > 0)
+	{
+		if (bit < 8)
+		{
+			if (signal == SIGUSR1)
+				out |= (1 << bit);
+			bit++;
+		}
+		if (bit == 8)
+		{
+			str[count] = (char)out;
+			count++;
+			bit = 0;
+			out = 0;
+			len--;
+		}
+	}
+	if (len == 0)
+	{
+		str[count] = '\0';
+		count = 0;
+		ft_printf("%s", str);
+		free(str);
+	}
+	return (len);
+}
+
+void	recive_bits(int signal)
+{
 	static size_t	len;
 	static size_t	count;
+	static char		*str;
+	static int		flag;
 
 	if (count < (sizeof(size_t) * 8))
 	{
@@ -29,22 +61,17 @@ void	recive_byte(int signal)
 	}
 	else
 	{
-		if (len > 0)
+		len = write_bits(signal, str, len);
+		if (len == 0)
 		{
-			if (bit < 8)
-			{
-				if (signal == SIGUSR1)
-					out |= (1 << bit);
-				bit++;
-			}
-			if (bit == 8)
-			{
-				ft_printf("%c", out);
-				bit = 0;
-				out = 0;
-				len--;
-			}
+			count = 0;
+			flag = 0;
 		}
+	}
+	if (flag == 0 && count == (sizeof(size_t) * 8))
+	{
+		str = (char *)malloc(sizeof(char) * len + 1);
+		flag = 1;
 	}
 }
 
@@ -52,7 +79,7 @@ int	main(void)
 {
 	struct sigaction	sa;
 
-	sa.sa_handler = recive_byte;
+	sa.sa_handler = recive_bits;
 	ft_printf("%d\n", getpid());
 	while (1)
 	{

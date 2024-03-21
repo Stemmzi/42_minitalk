@@ -6,16 +6,14 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/21 17:07:24 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/21 18:59:08 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include "libft/libft.h"
-#include <unistd.h>
-#include <stdlib.h>
 
-void	send_byte(int pid, char *str)
+void	send_bits(int pid, char *str)
 {
 	int		bit;
 	size_t	count;
@@ -58,7 +56,7 @@ int	main(int argc, char *argv[])
 	if (argc == 3)
 	{
 		pid = ft_atoi(argv[1]);
-		send_byte(pid, argv[2]);
+		send_bits(pid, argv[2]);
 	}
 	else
 	{
