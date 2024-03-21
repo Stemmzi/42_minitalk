@@ -6,7 +6,7 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/20 23:44:24 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/21 17:07:24 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,36 +15,50 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-void	send_byte(int pid, char c)
+void	send_byte(int pid, char *str)
 {
-	int	bit;
+	int		bit;
+	size_t	count;
+	size_t	count2;
+	size_t	len;
 
 	bit = 0;
-	while (bit <= 7)
+	count = 0;
+	count2 = 0;
+	len = ft_strlen(str);
+	while (count < (sizeof(size_t) * 8))
 	{
-		if ((c & (1 << bit)) != 0)
+		if ((len & ((size_t)1 << count)) != 0)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(1000);
-		bit++;
+		usleep(100);
+		count++;
+	}
+	while (count2 < len)
+	{
+		while (bit < 8)
+		{
+			if ((str[count2] & (1 << bit)) != 0)
+				kill(pid, SIGUSR1);
+			else
+				kill(pid, SIGUSR2);
+			usleep(100);
+			bit++;
+		}
+		count2++;
+		bit = 0;
 	}
 }
 
 int	main(int argc, char *argv[])
 {
 	int	pid;
-	int	count;
 
-	count = 0;
 	if (argc == 3)
 	{
 		pid = ft_atoi(argv[1]);
-		while (argv[2][count] != '\0')
-		{
-			send_byte(pid, argv[2]);
-			count++;
-		}
+		send_byte(pid, argv[2]);
 	}
 	else
 	{
