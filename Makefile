@@ -6,17 +6,13 @@ LIBFT = libft
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-all: $(NAME)
+all: libft $(NAME) $(NAMEC)
 
-$(NAME): libft 
-	$(CC) $(CFLAGS) server.c libft.a -o server
-	$(CC) $(CFLAGS) client.c libft.a -o client
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) server.o libft.a -o $(NAME)
 
-# $(NAME): libft $(OBJ) $(NAMEC)
-# 	$(CC) $(CFLAGS) server.o libft.a -o server
-
-# $(NAMEC):
-# 	$(CC) $(CFLAGS) client.o libft.a -o client
+$(NAMEC): $(OBJ)
+	$(CC) $(CFLAGS) client.o libft.a -o $(NAMEC)
 
 libft:
 	@make -C libft
@@ -32,10 +28,9 @@ clean:
 	@make -C libft clean
 
 fclean: clean
-	rm -f $(NAME)
 	rm -f libft.a
-	rm -f server
-	rm -f client
+	rm -f $(NAME)
+	rm -f $(NAMEC)
 	@make -C libft fclean
 
 re: fclean all
