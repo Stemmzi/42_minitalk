@@ -6,24 +6,18 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/21 18:59:08 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/22 15:04:30 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include "libft/libft.h"
 
-void	send_bits(int pid, char *str)
+void	send_size(int pid, size_t len)
 {
-	int		bit;
 	size_t	count;
-	size_t	count2;
-	size_t	len;
 
-	bit = 0;
 	count = 0;
-	count2 = 0;
-	len = ft_strlen(str);
 	while (count < (sizeof(size_t) * 8))
 	{
 		if ((len & ((size_t)1 << count)) != 0)
@@ -33,6 +27,18 @@ void	send_bits(int pid, char *str)
 		usleep(100);
 		count++;
 	}
+}
+
+void	send_bits(int pid, char *str)
+{
+	int		bit;
+	size_t	count2;
+	size_t	len;
+
+	bit = 0;
+	count2 = 0;
+	len = ft_strlen(str);
+	send_size(pid, len);
 	while (count2 < len)
 	{
 		while (bit < 8)

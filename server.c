@@ -6,14 +6,23 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/21 18:59:12 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/22 15:30:08 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include "libft/libft.h"
 
-size_t	write_bits(int signal, char	*str, size_t len)
+size_t	write_bits(char *str, int count)
+{
+	str[count] = '\0';
+	count = 0;
+	ft_printf("%s", str);
+	free(str);
+	return (count);
+}
+
+size_t	set_bits(int signal, char	*str, size_t len)
 {
 	static int	bit;
 	static int	out;
@@ -37,12 +46,7 @@ size_t	write_bits(int signal, char	*str, size_t len)
 		}
 	}
 	if (len == 0)
-	{
-		str[count] = '\0';
-		count = 0;
-		ft_printf("%s", str);
-		free(str);
-	}
+		count = write_bits(str, count);
 	return (len);
 }
 
@@ -61,7 +65,7 @@ void	recive_bits(int signal)
 	}
 	else
 	{
-		len = write_bits(signal, str, len);
+		len = set_bits(signal, str, len);
 		if (len == 0)
 		{
 			count = 0;
