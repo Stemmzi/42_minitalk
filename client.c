@@ -6,7 +6,7 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/22 15:04:30 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/25 18:40:14 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ int	main(int argc, char *argv[])
 
 	if (argc == 3)
 	{
+		if (ft_strlen(argv[2]) < 1)
+			return (1);
 		pid = ft_atoi(argv[1]);
 		send_bits(pid, argv[2]);
 	}
