@@ -1,24 +1,31 @@
 NAME = server
 NAMEC = client
-SRCS = server.c client.c
+NAME_BONUS = server_bonus
+NAMEC_BONUS = client_bonus
+SRCS = server.c client.c server_bonus.c client_bonus.c
 OBJ = $(SRCS:.c=.o)
-LIBFT = libft
+LIBFT = libft/libft.a
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-all: libft $(NAME) $(NAMEC)
+all: $(LIBFT) $(NAME) $(NAMEC)
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) server.o libft.a -o $(NAME)
+$(NAME): $(LIBFT) server.o
+	$(CC) $(CFLAGS) server.o $(LIBFT) -o $(NAME)
 
-$(NAMEC): $(OBJ)
-	$(CC) $(CFLAGS) client.o libft.a -o $(NAMEC)
+$(NAMEC): client.o
+	$(CC) $(CFLAGS) client.o $(LIBFT) -o $(NAMEC)
 
-libft:
-	@make -C libft
-	@cp libft/libft.a .
+bonus: $(LIBFT) $(NAME_BONUS) $(NAMEC_BONUS)
 
-bonus: all
+$(NAME_BONUS): server_bonus.o
+	$(CC) $(CFLAGS) server_bonus.o $(LIBFT) -o $(NAME_BONUS)
+
+$(NAMEC_BONUS): client_bonus.o
+	$(CC) $(CFLAGS) client_bonus.o $(LIBFT) -o $(NAMEC_BONUS)
+
+$(LIBFT):
+	make -C libft
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -29,10 +36,10 @@ clean:
 
 fclean: clean
 	rm -f libft.a
-	rm -f $(NAME)
-	rm -f $(NAMEC)
+	rm -f $(NAME) $(NAMEC)
+	rm -f $(NAME_BONUS) $(NAMEC_BONUS)
 	@make -C libft fclean
 
 re: fclean all
 
-.PHONY: all libft clean fclean re
+.PHONY: all bonus clean fclean re
