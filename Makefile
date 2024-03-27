@@ -30,6 +30,9 @@ $(LIBFT):
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+norm:
+	norminette $(SRCS)
+
 clean:
 	rm -f $(OBJ)
 	@make -C libft clean
@@ -42,4 +45,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all bonus clean fclean re
+.PHONY: all bonus norm clean fclean re
