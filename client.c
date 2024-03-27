@@ -6,7 +6,7 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/27 21:59:25 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/28 00:23:04 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	send_len(int pid, size_t len)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(100);
+		usleep(150);
 		bit++;
 	}
 }
@@ -47,7 +47,7 @@ void	send_bits(int pid, char *str)
 				kill(pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
-			usleep(100);
+			usleep(150);
 			bit++;
 		}
 		count++;
