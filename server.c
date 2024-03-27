@@ -6,7 +6,7 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/27 21:01:19 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/27 22:01:48 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ size_t	finish_up(char *str, int count)
 	return (count);
 }
 
-size_t	set_bits(int signal, char	*str, size_t len)
+size_t	set_bits(int signal, char *str, size_t len)
 {
 	static int	bit;
-	static int	out;
+	static int	current;
 	static int	count;
 
 	if (len > 0)
@@ -33,15 +33,15 @@ size_t	set_bits(int signal, char	*str, size_t len)
 		if (bit < 8)
 		{
 			if (signal == SIGUSR1)
-				out |= (1 << bit);
+				current |= (1 << bit);
 			bit++;
 		}
 		if (bit == 8)
 		{
-			str[count] = (char)out;
+			str[count] = (char)current;
 			count++;
 			bit = 0;
-			out = 0;
+			current = 0;
 			len--;
 		}
 	}

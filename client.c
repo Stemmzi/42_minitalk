@@ -6,7 +6,7 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/27 21:03:34 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/27 21:59:25 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,42 +15,42 @@
 
 void	send_len(int pid, size_t len)
 {
-	size_t	count;
+	size_t	bit;
 
-	count = 0;
-	while (count < (sizeof(size_t) * 8))
+	bit = 0;
+	while (bit < (sizeof(size_t) * 8))
 	{
-		if ((len & ((size_t)1 << count)) != 0)
+		if ((len & ((size_t)1 << bit)) != 0)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
 		usleep(100);
-		count++;
+		bit++;
 	}
 }
 
 void	send_bits(int pid, char *str)
 {
 	int		bit;
-	size_t	count2;
+	size_t	count;
 	size_t	len;
 
 	bit = 0;
-	count2 = 0;
+	count = 0;
 	len = ft_strlen(str);
 	send_len(pid, len);
-	while (count2 < len)
+	while (count < len)
 	{
 		while (bit < 8)
 		{
-			if ((str[count2] & (1 << bit)) != 0)
+			if ((str[count] & (1 << bit)) != 0)
 				kill(pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
 			usleep(100);
 			bit++;
 		}
-		count2++;
+		count++;
 		bit = 0;
 	}
 }
@@ -66,7 +66,7 @@ int	main(int argc, char *argv[])
 	}
 	else
 	{
-		ft_printf("Input must be \"./client <pid> <message>");
+		ft_printf("Input must be \"./client <pid> <message>\n");
 		return (1);
 	}
 	return (0);
