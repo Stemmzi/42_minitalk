@@ -6,14 +6,14 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/25 18:40:14 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/27 20:35:27 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include "libft/libft.h"
 
-void	send_size(int pid, size_t len)
+void	send_len(int pid, size_t len)
 {
 	size_t	count;
 
@@ -38,7 +38,7 @@ void	send_bits(int pid, char *str)
 	bit = 0;
 	count2 = 0;
 	len = ft_strlen(str);
-	send_size(pid, len);
+	send_len(pid, len);
 	while (count2 < len)
 	{
 		while (bit < 8)

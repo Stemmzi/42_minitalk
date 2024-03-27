@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:27 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/25 18:20:19 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/27 18:37:49 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void	send_pid(int pid)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(100);
+		usleep(150);
 		count++;
 	}
 }
 
-void	send_size(int pid, size_t len)
+void	send_len(int pid, size_t len)
 {
 	size_t	count;
 
@@ -42,7 +42,7 @@ void	send_size(int pid, size_t len)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(100);
+		usleep(150);
 		count++;
 	}
 }
@@ -57,7 +57,7 @@ void	send_bits(int pid, char *str)
 	count2 = 0;
 	len = ft_strlen(str);
 	send_pid(pid);
-	send_size(pid, len);
+	send_len(pid, len);
 	while (count2 < len)
 	{
 		while (bit < 8)
@@ -66,7 +66,7 @@ void	send_bits(int pid, char *str)
 				kill(pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
-			usleep(100);
+			usleep(150);
 			bit++;
 		}
 		count2++;
@@ -78,12 +78,12 @@ void	recive_answer(int signal)
 {
 	if (signal == SIGUSR1)
 	{
-		ft_printf("Success!");
+		ft_printf("Success!\n");
 		exit(EXIT_SUCCESS);
 	}
 	else
 	{
-		ft_printf("Failure!");
+		ft_printf("Failure!\n");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -91,16 +91,14 @@ void	recive_answer(int signal)
 int	main(int argc, char *argv[])
 {
 	int					pid;
-	struct sigaction	sa;
 
-	sa.sa_handler = recive_answer;
-	sa.sa_flags = SA_SIGINFO;
 	if (argc == 3)
 	{
 		if (ft_strlen(argv[2]) < 1)
 			return (1);
 		pid = ft_atoi(argv[1]);
-		sigaction(SIGUSR1, &sa, NULL);
+		signal(SIGUSR1, recive_answer);
+		signal(SIGUSR2, recive_answer);
 		while (1)
 		{
 			send_bits(pid, argv[2]);

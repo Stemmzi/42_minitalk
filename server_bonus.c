@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/25 18:41:01 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/27 20:39:46 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include "libft/libft.h"
 
-size_t	write_bits(char *str, int count, pid_t pid)
+size_t	finish_up(char *str, int count, pid_t pid)
 {
 	str[count] = '\0';
 	count = 0;
+	kill(pid, SIGUSR1);
+	usleep(100);
 	ft_printf("%s", str);
 	free(str);
-	kill(pid, SIGUSR1);
 	return (count);
 }
 
@@ -47,7 +48,7 @@ size_t	set_bits(int signal, char *str, size_t len, pid_t pid)
 		}
 	}
 	if (len == 0)
-		count = write_bits(str, count, pid);
+		count = finish_up(str, count, pid);
 	return (len);
 }
 
@@ -105,21 +106,22 @@ void	recive_bits(int signal)
 	if (count == (sizeof(size_t) * 8) + (sizeof(pid_t) * 8))
 	{
 		str = ((char *)malloc(sizeof(char) * len + 1));
+		if (str == NULL)
+		{
+			kill(pid, SIGUSR2);
+			exit(EXIT_FAILURE);
+		}
 		count++;
 	}
 }
 
 int	main(void)
 {
-	struct sigaction	sa;
-
-	sa.sa_handler = recive_bits;
-	sa.sa_flags = SA_SIGINFO;
 	ft_printf("%d\n", getpid());
 	while (1)
 	{
-		sigaction(SIGUSR1, &sa, NULL);
-		sigaction(SIGUSR2, &sa, NULL);
+		signal(SIGUSR1, recive_bits);
+		signal(SIGUSR2, recive_bits);
 		pause();
 	}
 	return (0);

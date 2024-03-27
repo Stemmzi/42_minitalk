@@ -6,14 +6,14 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/22 15:30:08 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/27 18:38:44 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include "libft/libft.h"
 
-size_t	write_bits(char *str, int count)
+size_t	finish_up(char *str, int count)
 {
 	str[count] = '\0';
 	count = 0;
@@ -46,7 +46,7 @@ size_t	set_bits(int signal, char	*str, size_t len)
 		}
 	}
 	if (len == 0)
-		count = write_bits(str, count);
+		count = finish_up(str, count);
 	return (len);
 }
 
