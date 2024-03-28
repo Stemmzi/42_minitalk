@@ -6,7 +6,7 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/28 01:06:14 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/28 16:32:26 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,8 @@ void	recive_bits(int signal)
 	static char		*str;
 	static int		flag;
 
-	printf("%zu\n", count);
 	if (count == (sizeof(size_t) * 8) + (sizeof(pid_t) * 8))
 	{
-		printf("check");
 		str = ((char *)malloc(sizeof(char) * len + 1));
 		if (str == NULL)
 		{
