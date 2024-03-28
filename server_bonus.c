@@ -6,7 +6,7 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/27 20:39:46 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/28 01:06:14 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ size_t	finish_up(char *str, int count, pid_t pid)
 	str[count] = '\0';
 	count = 0;
 	kill(pid, SIGUSR1);
-	usleep(100);
+	usleep(150);
 	ft_printf("%s", str);
 	free(str);
 	return (count);
@@ -89,8 +89,19 @@ void	recive_bits(int signal)
 	static char		*str;
 	static int		flag;
 
-	if (set_lenpid(signal, &len, &pid, &flag) == 1 && count
-		< ((sizeof(size_t) * 8) + (sizeof(pid_t) * 8)))
+	printf("%zu\n", count);
+	if (count == (sizeof(size_t) * 8) + (sizeof(pid_t) * 8))
+	{
+		printf("check");
+		str = ((char *)malloc(sizeof(char) * len + 1));
+		if (str == NULL)
+		{
+			kill(pid, SIGUSR2);
+			exit(EXIT_FAILURE);
+		}
+		count++;
+	}
+	if (set_lenpid(signal, &len, &pid, &flag) == 1)
 		count++;
 	else
 	{
@@ -99,19 +110,8 @@ void	recive_bits(int signal)
 		{
 			flag = 1;
 			count = 0;
-			len = 0;
 			pid = 0;
 		}
-	}
-	if (count == (sizeof(size_t) * 8) + (sizeof(pid_t) * 8))
-	{
-		str = ((char *)malloc(sizeof(char) * len + 1));
-		if (str == NULL)
-		{
-			kill(pid, SIGUSR2);
-			exit(EXIT_FAILURE);
-		}
-		count++;
 	}
 }
 
