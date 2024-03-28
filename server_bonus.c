@@ -6,7 +6,7 @@
 /*   By: sgeiger <sgeiger@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 22:39:46 by sgeiger           #+#    #+#             */
-/*   Updated: 2024/03/28 16:32:26 by sgeiger          ###   ########.fr       */
+/*   Updated: 2024/03/28 18:47:41 by sgeiger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,8 @@ void	recive_bits(int signal)
 	if (count == (sizeof(size_t) * 8) + (sizeof(pid_t) * 8))
 	{
 		str = ((char *)malloc(sizeof(char) * len + 1));
-		if (str == NULL)
-		{
-			kill(pid, SIGUSR2);
+		if (!str && (kill(pid, SIGUSR2) == 0))
 			exit(EXIT_FAILURE);
-		}
 		count++;
 	}
 	if (set_lenpid(signal, &len, &pid, &flag) == 1)
